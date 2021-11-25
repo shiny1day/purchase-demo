@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shiny.demo.dao.UserDao">
+
+    <select id="login" parameterType="com.shiny.demo.entity.User" resultType="com.shiny.demo.entity.User">
+        select name, password FROM user WHERE name = #{name} AND password = #{password}
+    </select>
+
+    <insert id="addUser" parameterType="com.shiny.demo.entity.User">
+        INSERT INTO user (name, password, job) VALUES (#{name}, #{password}, #{job})
+    </insert>
+
+</mapper>

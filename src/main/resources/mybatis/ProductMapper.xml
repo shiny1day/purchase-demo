@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shiny.demo.dao.ProductDao">
+
+    <select id="findAll" resultType="com.shiny.demo.entity.Product" parameterType="com.shiny.demo.dto.QueryParam">
+        select * from product
+        where status = 1
+        <if test="searchText != null and searchText != ''">
+            and lower(name) like lower(concat(concat('%', trim(#{searchText})), '%'))
+        </if>
+        order by
+        <if test="sortName != null and sortName != ''">
+            ${sortName}
+        </if>
+        <if test="sortOrder != null and sortOrder != ''">
+            ${sortOrder}
+        </if>
+        limit ${startRow}, ${pageSize}
+    </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(id) from product
+        where status = 1
+        <if test="searchText != null and searchText != ''">
+            and lower(name) like lower(concat(concat('%', trim(#{searchText})), '%'))
+        </if>
+    </select>
+
+    <insert id="addProduct">
+        INSERT INTO product (`name`, price, spec, `desc`, createTime, createUser, updateTime, updateUser)
+        VALUES (#{name}, #{price}, #{spec}, #{desc}, #{createTime}, #{createUser}, #{createTime}, #{createUser})
+    </insert>
+
+    <update id="deleteProductById">
+        update product set status = 0
+        where id = #{productId}
+    </update>
+
+    <update id="updateProduct">
+        update product SET `name` = #{name}, price = #{price}, spec = #{spec}, `desc` = #{desc},
+        updateTime = #{updateTime}, updateUser = #{updateUser}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findById" resultType="com.shiny.demo.entity.Product">
+        SELECT * FROM product where id = #{id}
+    </select>
+
+</mapper>

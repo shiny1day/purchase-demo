@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加材料</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+</head>
+<body>
+<h2>添加材料</h2>
+请输入名称：<input id="name" name="name" type="text"/><br><br>
+请输入价格：<input id="price" name="price" type="text"/><br><br>
+规格：<input id="spec" name="spec" type="text"/><br><br>
+描述：<input id="desc" name="desc" type="text"/><br><br>
+<br><br>
+<button onclick="goAdd()" name="sub" id="sub">添加</button>
+<button name="button" onclick="javascript:history.back(-1);">返回</button>
+</body>
+<script>
+    function goAdd() {
+        var name = $("#name").val();
+        var price = $("#price").val();
+        var spec = $("#spec").val();
+        var desc = $("#desc").val();
+        $.post("/product/add", {name: name, price: price, spec: spec, desc: desc}, function (res) {
+            if (res.code == 1) {
+                alert("添加成功")
+                window.location.href = "/index";
+            } else {
+                alert(res.msg);
+            }
+        })
+    }
+</script>
+</html>

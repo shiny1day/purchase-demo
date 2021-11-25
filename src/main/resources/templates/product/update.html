@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改用户</title>
+    <script th:src="@{/js/jquery.min.js}"></script>
+</head>
+<body>
+<h2>这是修改页面</h2>
+<input type="hidden" id="id" th:value="${pro.id}"><br><br>
+请输入名称：<input id="name" th:value="${pro.name}"/><br><br>
+请输入价格：<input id="price" th:value="${pro.price}"/><br><br>
+规格：<input id="spec" th:value="${pro.spec}"/><br><br>
+描述：<input id="desc" th:value="${pro.desc}"/><br><br>
+<br><br>
+<button onclick="goupdate()">修改</button>
+ 
+<button name="button" onclick="javascript:history.back(-1);">返回</button>
+</body>
+<script>
+    function goupdate() {
+        var id = $("#id").val();
+        var name = $("#name").val();
+        var price = $("#price").val();
+        var spec = $("#spec").val();
+        var desc = $("#desc").val();
+        $.post("/product/update", {id: id, name: name, price: price, spec: spec, desc: desc}, function (res) {
+            if (res.code == 1) {
+                alert("修改成功");
+                window.location.href = "/index";
+            } else {
+                alert(res.msg);
+            }
+        })
+    }
+</script>
+</html>

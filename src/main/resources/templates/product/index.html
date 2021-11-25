@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>a {
+        text-decoration: none
+    }</style>
+    <!-- Bootstrap Core CSS -->
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/bootstrap/css/bootstrap-table.css}" rel="stylesheet">
+
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap-table.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap-table-zh-CN.js}"></script>
+</head>
+<body>
+欢迎你 ：<input th:value="${admin.name}" style="border: none; outline: none"/><br>
+<h4>采购信息维护</h4>
+
+<button><a href="/goAdd">添加</a></button>
+
+<table id="test-table" class="col-xs-12" data-toolbar="#toolbar"></table>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        initTable();
+
+    })
+
+    function initTable() {
+        $('#test-table').bootstrapTable({
+            method: 'post',
+            toolbar: '#toolbar',    //工具按钮用哪个容器
+            striped: true,      //是否显示行间隔色
+            cache: false,      //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,     //是否显示分页（*）
+            sortable: true,      //是否启用排序
+            sortOrder: "ID desc",     //排序方式
+            pageNumber: 1,      //初始化加载第一页，默认第一页
+            pageSize: 10,      //每页的记录行数（*）
+            pageList: [10, 20, 50, 100],  //可供选择的每页的行数（*）
+            url: "/product/list",//这个接口需要处理bootstrap table传递的固定参数
+            queryParamsType: '', //默认值为 'limit' ,在默认情况下 传给服务端的参数为：offset,limit,sort
+            // 设置为 '' 在这种情况下传给服务器的参数为：pageSize,pageNumber
+
+            //queryParams: queryParams,//前端调用服务时，会默认传递上边提到的参数，如果需要添加自定义参数，可以自定义一个函数返回请求参数
+            sidePagination: "server",   //分页方式：client客户端分页，server服务端分页（*）
+            //search: true, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            strictSearch: true,
+            //showColumns: true, //是否显示所有的列
+            //showRefresh: true, //是否显示刷新按钮
+            minimumCountColumns: 2,    //最少允许的列数
+            clickToSelect: true,    //是否启用点击选中行
+            searchOnEnterKey: true,
+            search: true,
+            columns: [
+                {
+                    title: "编号",
+                    field: "id",
+                    align: "center",
+                    valign: "middle",
+                    sortable: true
+
+                },
+                {
+                    title: "名称",
+                    field: "name",
+                    align: "center",
+                    valign: "middle",
+                    sortable: true
+                },
+                {
+                    title: "价格",
+                    field: "price",
+                    align: "center",
+                    valign: "middle",
+                    sortable: true
+                },
+                {
+                    title: "规格",
+                    field: "spec",
+                    align: "center",
+                    valign: "middle"
+                },
+                {
+                    title: "描述",
+                    field: "desc",
+                    align: "center",
+                    valign: "middle"
+                },
+                {
+                    title: '操作',
+                    field: 'id',
+                    formatter: option
+                }
+            ],
+            pagination: true
+        });
+    }
+
+    // 定义删除、更新操作
+    function option(value, row, index) {
+        var htm = '<button id="delUser" onclick="delUser(this, '
+            + value + ')">删除</button><button id="updProduct" onclick="updProduct('
+            + value + ')">修改</button>'
+        return htm;
+    }
+
+    // 删除用户
+    function delUser(dom, productId) {
+        var msg = confirm("确认删除吗？");
+        if (msg) {
+            $.ajax({
+                url: '/product/del/' + productId,
+                type: 'delete',
+                success: function (data) {
+                    $(dom).parent().parent().hide();
+                },
+                error: function (data) {
+                    alert("服务器繁忙")
+                }
+            });
+        }
+    }
+
+    // 编辑用户
+    function updProduct(id) {
+        window.location.href = "/goUpdate/" + id;
+    }
+</script>
+</body>
+</html>
